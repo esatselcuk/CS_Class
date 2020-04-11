@@ -137,6 +137,7 @@ namespace GH_CS_Class
 
         }
 
+        //İşlemci Seri No Bilgisi Alınıyor
         String GetHDDSerialNo()
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
@@ -149,6 +150,22 @@ namespace GH_CS_Class
             }
 
             return serial_number;
+        }
+
+        //Anakart Üretici Bilgisi Alınıyor
+        string GetMainBoardMaker()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
+
+            foreach (ManagementObject wmi in searcher.Get())
+            {
+                try
+                {
+                    return wmi.GetPropertyValue("Manufacturer").ToString();
+                }
+                catch { }
+            }
+            return "Bilinmiyor";
         }
     }
 }
