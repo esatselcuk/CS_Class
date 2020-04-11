@@ -136,5 +136,19 @@ namespace GH_CS_Class
             return Id;
 
         }
+
+        String GetHDDSerialNo()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+
+            string serial_number = "";
+
+            foreach (ManagementObject wmi_HD in searcher.Get())
+            {
+                serial_number = wmi_HD["SerialNumber"].ToString();
+            }
+
+            return serial_number;
+        }
     }
 }
