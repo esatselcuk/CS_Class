@@ -136,19 +136,44 @@ namespace GH_CS_Class
             return Id;
 
         }
-
-        //İşlemci Seri No Bilgisi Alınıyor
+        //İşlemci Üreticisi Alınıyor
+        string GetCPUManufacturer()
+        {
+            string cpuMan = String.Empty;
+            ManagementClass mgmt = new ManagementClass("Win32_Processor");
+            ManagementObjectCollection objCol = mgmt.GetInstances();
+            foreach (ManagementObject obj in objCol)
+            {
+                if (cpuMan == String.Empty)
+                {
+                    cpuMan = obj.Properties["Manufacturer"].Value.ToString();
+                }
+            }
+            return cpuMan;
+        }
+        //İşlemci GHZ Alınmaya çalışılıyor
+        double? GetCpuSpeedInGHz()
+        {
+            double? GHz = null;
+            using (ManagementClass mc = new ManagementClass("Win32_Processor"))
+            {
+                foreach (ManagementObject mo in mc.GetInstances())
+                {
+                    GHz = 0.001 * (UInt32)mo.Properties["CurrentClockSpeed"].Value;
+                    break;
+                }
+            }
+            return GHz;
+        }
+        //HDD Seri No Bilgisi Alınıyor
         String GetHDDSerialNo()
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
-
             string serial_number = "";
-
             foreach (ManagementObject wmi_HD in searcher.Get())
             {
                 serial_number = wmi_HD["SerialNumber"].ToString();
             }
-
             return serial_number;
         }
 
@@ -156,7 +181,6 @@ namespace GH_CS_Class
         string GetMainBoardMaker()
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
-
             foreach (ManagementObject wmi in searcher.Get())
             {
                 try
@@ -166,6 +190,55 @@ namespace GH_CS_Class
                 catch { }
             }
             return "Bilinmiyor";
+        }
+
+        //Anakart BIOS Üretici Bilgileri Alınıyor
+        string GetBIOSMaker()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
+            foreach (ManagementObject wmi in searcher.Get())
+            {
+                try
+                {
+                    return wmi.GetPropertyValue("Manufacturer").ToString();
+                }
+                catch { }
+            }
+            return "Bilinmiyor";
+        }
+        //BIOS Seri Numarası Alınıyor
+        string GetBIOSSerialNumber()
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
+            foreach (ManagementObject wmi in searcher.Get())
+            {
+                try
+                {
+                    return wmi.GetPropertyValue("SerialNumber").ToString();
+                }
+                catch { }
+            }
+            return "Bilinmiyor";
+
+        }
+        //Fiziksel Ram Miktarı Alınıyor
+        public static string GetPhysicalMemory()
+        {
+            ManagementScope oMs = new ManagementScope();
+            ObjectQuery oQuery = new ObjectQuery("SELECT Capacity FROM Win32_PhysicalMemory");
+            ManagementObjectSearcher oSearcher = new ManagementObjectSearcher(oMs, oQuery);
+            ManagementObjectCollection oCollection = oSearcher.Get();
+
+            long MemSize = 0;
+            long mCap = 0;
+
+            foreach (ManagementObject obj in oCollection)
+            {
+                mCap = Convert.ToInt64(obj["Capacity"]);
+                MemSize += mCap;
+            }
+            MemSize = (MemSize / 1024) / 1024 / 1024;
+            return MemSize.ToString() + " GB";
         }
     }
 }
