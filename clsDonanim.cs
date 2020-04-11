@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -117,6 +118,23 @@ namespace GH_CS_Class
                 }
             }
             return null;
+        }
+
+        //İşlemci ID Bilgisini Almak İçin Hazırlanmıştır.
+        public static String GetProcessorId()
+        {
+
+            ManagementClass mc = new ManagementClass("win32_processor");
+            ManagementObjectCollection moc = mc.GetInstances();
+            String Id = String.Empty;
+            foreach (ManagementObject mo in moc)
+            {
+
+                Id = mo.Properties["processorID"].Value.ToString();
+                break;
+            }
+            return Id;
+
         }
     }
 }
