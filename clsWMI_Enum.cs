@@ -237,5 +237,18 @@ namespace GH_CS_Class
             SystemCreationClassName,
             SystemName
         }
+
+        static readonly string[] Boyut_Cinsleri = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };    
+        static string Boyut_Cinsi(Int64 value)
+        {
+            //Parametre Olarak Gelen Değeri KB, MB, vb cinsinden gösterecektir.
+            if (value < 0) { return "-" + Boyut_Cinsi(-value); }
+            if (value == 0) { return "0.0 bytes"; }
+
+            int mag = (int)Math.Log(value, 1024);
+            decimal adjustedSize = (decimal)value / (1L << (mag * 10));
+
+            return string.Format("{0:n1} {1}", adjustedSize, Boyut_Cinsleri[mag]);
+        }
     }
 }
