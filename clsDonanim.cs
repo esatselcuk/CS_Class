@@ -8,12 +8,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace GH_CS_Class
 {
     class clsDonanim
     {
-        string mac_adresi_getir()
+        public string mac_adresi_getir()
         {
             //https://mustafabukulmez.com/2018/04/26/c-sharp-bilgisayar-bilgileri-almak/ adresinden faydalanılmıştır
             try
@@ -137,7 +138,7 @@ namespace GH_CS_Class
 
         }
         //İşlemci Üreticisi Alınıyor
-        string GetCPUManufacturer()
+        public string GetCPUManufacturer()
         {
             string cpuMan = String.Empty;
             ManagementClass mgmt = new ManagementClass("Win32_Processor");
@@ -152,7 +153,7 @@ namespace GH_CS_Class
             return cpuMan;
         }
         //İşlemci GHZ Alınmaya çalışılıyor
-        double? GetCpuSpeedInGHz()
+        public double? GetCpuSpeedInGHz()
         {
             double? GHz = null;
             using (ManagementClass mc = new ManagementClass("Win32_Processor"))
@@ -166,7 +167,7 @@ namespace GH_CS_Class
             return GHz;
         }
         //HDD Seri No Bilgisi Alınıyor
-        String GetHDDSerialNo()
+        public string GetHDDSerialNo()
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
             string serial_number = "";
@@ -178,7 +179,7 @@ namespace GH_CS_Class
         }
 
         //Anakart Üretici Bilgisi Alınıyor
-        string GetMainBoardMaker()
+        public string GetMainBoardMaker()
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
             foreach (ManagementObject wmi in searcher.Get())
@@ -193,7 +194,7 @@ namespace GH_CS_Class
         }
 
         //Anakart BIOS Üretici Bilgileri Alınıyor
-        string GetBIOSMaker()
+        public string GetBIOSMaker()
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
             foreach (ManagementObject wmi in searcher.Get())
@@ -207,7 +208,7 @@ namespace GH_CS_Class
             return "Bilinmiyor";
         }
         //BIOS Seri Numarası Alınıyor
-        string GetBIOSSerialNumber()
+        public string GetBIOSSerialNumber()
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
             foreach (ManagementObject wmi in searcher.Get())
@@ -222,7 +223,7 @@ namespace GH_CS_Class
 
         }
         //Fiziksel Ram Miktarı Alınıyor
-        public static string GetPhysicalMemory()
+        public string GetPhysicalMemory()
         {
             ManagementScope oMs = new ManagementScope();
             ObjectQuery oQuery = new ObjectQuery("SELECT Capacity FROM Win32_PhysicalMemory");
